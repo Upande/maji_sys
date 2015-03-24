@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}MajiSYS - Sign in {% endblock title %}
+
+{% block main_content %}
+<div class="container">
+	<div class="row">
+		<div class="col-md-8 col-md-offset-2">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div>
+						<h3 style="display: inline;">Application Login</h3>
+					</div>
+				</div>
+				<div class="panel-body">
+					{% if form.non_field_errors %}
+					<div class="alert alert-info" role="alert">
+						Please enter a correct username and password. Both username and password are case-sensitive.
+					</div>
+					{% else %}
+					<div style="padding: 15px; margin-bottom: 20px; border: 1px tranparent;">&nbsp;</div>
+					{% endif %}
+					<form class="form-horizontal" method="POST" role="form">{% csrf_token %}
+						{% for field in form %}
+						<div class="form-group">
+							<label class="col-sm-3 control-label">{{ field.label }}</label>
+							<div class="col-sm-8">
+								{{ field }}
+								<span style="color: red">
+									{% for error in field.errors %} {{ error }} {% endfor %}
+								</span>
+							</div>
+						</div>
+						{% endfor %}
+						<div class="form-group last">
+							<div class="col-sm-offset-3 col-sm-9">
+								<button type="submit" class="btn btn-success btn-sm">
+									sign in
+								</button>
+								<button type="reset" class="btn btn-default btn-sm">
+									cancel
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>	
+{% endblock main_content %}

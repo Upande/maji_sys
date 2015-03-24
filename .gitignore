@@ -1,0 +1,4 @@
+*.pyc
+logs/
+schema.txt
+db.sqlite3

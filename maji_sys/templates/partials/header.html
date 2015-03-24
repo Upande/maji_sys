@@ -18,7 +18,11 @@
             <li><a href="#">My Profile</a></li>
           </ul>
         </li>
-        <li><a href="#"><i class="glyphicon glyphicon-lock"></i> Logout</a></li>
+        {% if request.user.username %}
+        <li><a href="{% url 'auth_logout' %}"><i class="glyphicon glyphicon-lock"></i> Logout</a></li>
+        {% else %}
+        <li><a href="{% url 'auth_login' %}">Sign in</a></li>
+        {% endif %}
       </ul>
     </div>
   </div><!-- /container -->

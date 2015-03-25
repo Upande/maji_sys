@@ -13,7 +13,6 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
@@ -85,12 +84,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'assets'),
+    #os.path.join(BASE_DIR, 'assets'),
+    os.path.abspath(os.path.join(BASE_DIR, os.pardir, 'assets')),
 )
 
 TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'templates'),
+    #os.path.join(BASE_DIR, 'templates'),
+    os.path.abspath(os.path.join(BASE_DIR, os.pardir, 'templates')),
 )
-
-print 'TEMPLATE_DIRS: {0}'.format(TEMPLATE_DIRS)
-print 'STATICFILES_DIRS: {0}'.format(STATICFILES_DIRS)

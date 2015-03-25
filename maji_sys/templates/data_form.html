@@ -1,0 +1,28 @@
+{% extends 'content.html' %}
+
+{% block title %}MajiSYS - Data Entry Form{% endblock title %}
+{% block extra_head %}
+<script src="{{ STATIC_URL }}js/react.min.js"></script>
+{% endblock extra_head %}
+{% block application_content %}
+	<div class="row">
+		<form class="form-horizontal">{% csrf_token %}
+			<div class="col-md-6 form-group">
+				<label class="col-sm-2 control-label">Location:</label>
+				<div class="col-sm-8">
+					<select name="location" class="form-control">
+						{% for location in locations %}
+						<option value="{{ location.locationkey }}">{{ location.shortname }}</option>
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+			<div class="col-md-6 form-group">
+				<label class="col-sm-3 control-label">REG NO:</label>
+				<div class="col-sm-8">
+					<input name="regno" class="form-control">
+				</div>
+			</div>
+		</form>
+	</div>
+{% endblock application_content %}

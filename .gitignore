@@ -1,9 +1,8 @@
-<<<<<<< HEAD
 *.pyc
 logs/
 schema.txt
 db.sqlite3
-=======
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -61,4 +60,3 @@ docs/_build/
 
 # PyBuilder
 target/
->>>>>>> 812d3d2c6ae4f3a071362c03ffebf1f592f1289f

@@ -3,6 +3,7 @@
 {% block title %}MajiSYS - Data Entry Form{% endblock title %}
 {% block extra_head %}
 <script src="{{ STATIC_URL }}js/react.min.js"></script>
+<script src="{{ STATIC_URL }}js/moment.js"></script>
 <style>
 	table{counter-reset:section;}
 		.count:before
@@ -137,24 +138,28 @@
     });
 	
 	function drawTable(){
+	                console.log(y);
 			var date1 = new Date(y);
 			var date2 = new Date(x);
 			var timeDiff = Math.abs(date2.getTime() - date1.getTime());
 			var z= Math.ceil(timeDiff / (1000 * 3600 * 24)); 
 			var table = document.getElementById("table_data").getElementsByTagName('tbody');
 			var tabled = document.getElementById("table_data");
-	                var itemcount = 1
-	                var countContent= '<tr><td class="section">'
-			var newRowContent = '</td><td><input type="text" name="date" class="numbersOnly" onkeypress="validate(event)" placeholder=""/></td><td><input type="text" name="reading1" class="numbersOnly" onkeypress="validate(event)" /></td><td><input type="text" name="reading2" class="numbersOnly" onkeypress="validate(event)" /></td><td><input type="text" name="reading3" class="numbersOnly" onkeypress="validate(event)" /></td><td><input type="text" name="remark"/></td></tr>';
+	                var itemcount = 1;
+	                var dte = date2;
+	                var countContent= '<tr><td class="section">';
+                        var dateContent = '</td><td><input type="date" name="date" class="dateonly" value=' 
+			var newRowContent = ' placeholder="" disabled/></td><td><input type="text" name="reading1" class="numbersOnly" onkeypress="validate(event)" /></td><td><input type="text" name="reading2" class="numbersOnly" onkeypress="validate(event)" /></td><td><input type="text" name="reading3" class="numbersOnly" onkeypress="validate(event)" /></td><td><input type="text" name="remark"/></td></tr>';
 			//<button type="button" name="delete_row" class="glyphicon glyphicon-remove-sign" onclick="deleteRow(this)"></button> #delete button
 			//rows = table.insertRow(z);
 			 if (tabled.rows.length > 0) {
                 $("#table_data tbody tr").remove(); 
                 for(i = 0; i < z+1; i++){
 			       //keep track of first date. Increment based on the variable
-			                html = countContent + String(itemcount) + newRowContent;  
-			                itemcount ++;
-					$('#table_data > tbody').append(html);
+			       html = countContent + String(itemcount) + dateContent + moment(dte).format('YYYY-MM-DD') + newRowContent;  
+			       itemcount ++;			              
+			       dte = moment(dte).add('days',1);
+			       $('#table_data > tbody').append(html);
   
 				}
             }
@@ -174,10 +179,7 @@
 			for (i = 0; i < dateArray.length; i ++ ) {
 			    alert (dateArray[i]);
 			}
-		    }
-
-			
-
+		    }			
  
 	/*
 	$('#feature_id').on("change", function(){

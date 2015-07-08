@@ -79,37 +79,37 @@
 	            <div class='col-sm-5 input-group date' id='datetimepicker2'>
 		            <input type='text' class="form-control" name="enddate" id="enddate" value=""/>
 		            <span class="input-group-addon">
-		                <span class="glyphicon glyphicon-calendar"></span>
+		              <span class="glyphicon glyphicon-calendar"></span>
 		            </span>
 	            </div>
 	    </div>
-	</div>
-	<div class="row">
-		<div class="col-md-5 form-group" align="right">
-			<button type="button" id="add_entry" class="btn btn-info btn-md" onclick="drawTable()">GO</button>
-		</div>
-	</div>
-		<hr />
-			<b><legend class="col-sm-3">Form</legend></b>			
-			<table id="table_data" class="table table-stripped">
-				<thead>
-					<tr>
-						<th class="col-sm-1"></th>
-						<th class="col-sm-1" align="center">Date</th>
-						<th class="col-sm-1" align="center">Reading 1</th>
-						<th class="col-sm-1" align="center">Reading 2</th>
-						<th class="col-sm-1" align="center">Reading 3</th>
-						<th class="col-sm-1" align="center">Remarks</th>
-						<!--th class="col-sm-1">Delete</th-->
-					</tr>
-				</thead>
-				<tbody>
-				</tbody>
-			</table>
-		<div class="form-final">
-			<button type="submit" class="btn btn-primary">submit</button>
-			<a href="{% url 'data_form' %}" class="btn btn-defualt">Cancel</a>
-		</div>
+     </div>
+     <div class="row">
+       <div class="col-md-5 form-group" align="right">
+	 <button type="button" id="add_entry" class="btn btn-info btn-md" onclick="drawTable()">GO</button>
+       </div>
+     </div>
+     <hr />
+     <b><legend class="col-sm-3">Form</legend></b>			
+     <table id="table_data" class="table table-stripped">
+       <thead>
+	 <tr>
+	   <th class="col-sm-1"></th>
+	   <th class="col-sm-1" align="center">Date</th>
+	   <th class="col-sm-1" align="center">Reading 1</th>
+	   <th class="col-sm-1" align="center">Reading 2</th>
+	   <th class="col-sm-1" align="center">Reading 3</th>
+	   <th class="col-sm-1" align="center">Remarks</th>
+	   <!--th class="col-sm-1">Delete</th-->
+	 </tr>
+       </thead>
+       <tbody>
+       </tbody>
+     </table>
+     <div class="form-final">
+       <button type="submit" class="btn btn-primary">submit</button>
+       <a href="{% url 'data_form' %}" class="btn btn-defualt">Cancel</a>
+     </div>
 	</form>
 </div>
 
@@ -143,13 +143,19 @@
 			var z= Math.ceil(timeDiff / (1000 * 3600 * 24)); 
 			var table = document.getElementById("table_data").getElementsByTagName('tbody');
 			var tabled = document.getElementById("table_data");
-			var newRowContent = '<tr><td class="section">1</td><td><input type="text" name="date" class="numbersOnly" onkeypress="validate(event)" placeholder=""/></td><td><input type="text" name="reading1" class="numbersOnly" onkeypress="validate(event)" /></td><td><input type="text" name="reading2" class="numbersOnly" onkeypress="validate(event)" /></td><td><input type="text" name="reading3" class="numbersOnly" onkeypress="validate(event)" /></td><td><input type="text" name="remark"/></td></tr>';
+	                var itemcount = 1
+	                var countContent= '<tr><td class="section">'
+			var newRowContent = '</td><td><input type="text" name="date" class="numbersOnly" onkeypress="validate(event)" placeholder=""/></td><td><input type="text" name="reading1" class="numbersOnly" onkeypress="validate(event)" /></td><td><input type="text" name="reading2" class="numbersOnly" onkeypress="validate(event)" /></td><td><input type="text" name="reading3" class="numbersOnly" onkeypress="validate(event)" /></td><td><input type="text" name="remark"/></td></tr>';
 			//<button type="button" name="delete_row" class="glyphicon glyphicon-remove-sign" onclick="deleteRow(this)"></button> #delete button
 			//rows = table.insertRow(z);
 			 if (tabled.rows.length > 0) {
                 $("#table_data tbody tr").remove(); 
-                for(i = 0; i < z+1; i++){	
-					$('#table_data > tbody').append(newRowContent);
+                for(i = 0; i < z+1; i++){
+			       //keep track of first date. Increment based on the variable
+			                html = countContent + String(itemcount) + newRowContent;  
+			                itemcount ++;
+					$('#table_data > tbody').append(html);
+  
 				}
             }
             getDates();

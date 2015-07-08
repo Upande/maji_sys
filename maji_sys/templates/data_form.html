@@ -3,26 +3,263 @@
 {% block title %}MajiSYS - Data Entry Form{% endblock title %}
 {% block extra_head %}
 <script src="{{ STATIC_URL }}js/react.min.js"></script>
+<style>
+	table{counter-reset:section;}
+		.count:before
+		{
+		counter-increment:section;
+		content:counter(section);
+		}
+	.form-horizontal .control-label {
+		text-align: right;
+	}
+</style>
 {% endblock extra_head %}
 {% block application_content %}
-	<div class="row">
-		<form class="form-horizontal">{% csrf_token %}
+<div class="row">
+	<form action='dataform' class="form-horizontal" method="POST">{% csrf_token %}
+		<div class="row">
 			<div class="col-md-6 form-group">
-				<label class="col-sm-2 control-label">Location:</label>
+				<label class="col-sm-3 control-label">Feature</label>
 				<div class="col-sm-8">
-					<select name="location" class="form-control">
-						{% for location in locations %}
-						<option value="{{ location.locationkey }}">{{ location.shortname }}</option>
+					<select id="feature" name="feature" class="form-control">
+						<option value="Z">-Select Feature-</option>
+						{% for f in features %}
+						<option value="{{ f.featureclasskey }}">{{ f.featureclass }}</option>
 						{% endfor %}
 					</select>
 				</div>
 			</div>
+		</div>
+		<div class="row">
 			<div class="col-md-6 form-group">
-				<label class="col-sm-3 control-label">REG NO:</label>
+				<label class="col-sm-3 control-label">Parameter</label>
 				<div class="col-sm-8">
-					<input name="regno" class="form-control">
+					<select id = "parameter" name="parameter" class="form-control" disabled="true">
+						<option>-Select Parameter-</option>	
+					</select>
 				</div>
 			</div>
-		</form>
+		</div>
+		<div class="row">
+			<div class="col-md-6 form-group" align="center">
+				<label class="col-sm-3 control-label">Location:</label>
+				<div class="col-sm-8">
+					<select name="location" class="form-control">
+						<option>-Select Location-</option>
+						{% for location in locations %}
+						<option value="{{ location.locationkey }}">{{ location.id }}</option>
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-6 form-group">
+				<label class="col-sm-3 control-label">Observer:</label>
+				<div class="col-sm-8">
+					<input name="observer" class="form-control" readonly="true" value="{{ request.user.username }}">
+				</div>
+			</div>
+		</div>
+	<div class="row">
+		<div class="col-md-6 form-group" align="center">
+			<label class="col-sm-3 control-label">Start date:</label>
+            	<div class='col-sm-5 input-group date' id='datetimepicker1'>
+	                <input type='text' class="form-control" name="startdate" id="startdate" value=""/>
+	                <span class="input-group-addon">
+	                    <span class="glyphicon glyphicon-calendar"></span>
+	                </span>
+            </div>
+        </div>
+     </div>
+     <div class="row">
+	    <div class="col-md-6 form-group" align="center">
+	    	<label class="col-sm-3 control-label">End date:</label>
+	            <div class='col-sm-5 input-group date' id='datetimepicker2'>
+		            <input type='text' class="form-control" name="enddate" id="enddate" value=""/>
+		            <span class="input-group-addon">
+		                <span class="glyphicon glyphicon-calendar"></span>
+		            </span>
+	            </div>
+	    </div>
 	</div>
+	<div class="row">
+		<div class="col-md-5 form-group" align="right">
+			<button type="button" id="add_entry" class="btn btn-info btn-md" onclick="drawTable()">GO</button>
+		</div>
+	</div>
+		<hr />
+			<b><legend class="col-sm-3">Form</legend></b>			
+			<table id="table_data" class="table table-stripped">
+				<thead>
+					<tr>
+						<th class="col-sm-1"></th>
+						<th class="col-sm-1" align="center">Date</th>
+						<th class="col-sm-1" align="center">Reading 1</th>
+						<th class="col-sm-1" align="center">Reading 2</th>
+						<th class="col-sm-1" align="center">Reading 3</th>
+						<th class="col-sm-1" align="center">Remarks</th>
+						<!--th class="col-sm-1">Delete</th-->
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		<div class="form-final">
+			<button type="submit" class="btn btn-primary">submit</button>
+			<a href="{% url 'data_form' %}" class="btn btn-defualt">Cancel</a>
+		</div>
+	</form>
+</div>
+
+{% block footer_content %}
+<script>
+	var x
+	var y
+	var z
+
+	$(function(){
+		
+        $('#datetimepicker1').datetimepicker({format: 'YYYY-MM-DD'});
+        $('#datetimepicker2').datetimepicker({format: 'YYYY-MM-DD'});
+        $("#datetimepicker1").on("dp.change", function (e) {
+            $('#datetimepicker2').data("DateTimePicker").minDate(e.date);
+            x=document.getElementById("startdate").value;
+            //drawTable();
+           
+        });
+        $("#datetimepicker2").on("dp.change", function (e) {
+            $('#datetimepicker1').data("DateTimePicker").maxDate(e.date);
+            y=document.getElementById("enddate").value;
+        	//drawTable();
+        });
+    });
+	
+	function drawTable(){
+			var date1 = new Date(y);
+			var date2 = new Date(x);
+			var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+			var z= Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+			var table = document.getElementById("table_data").getElementsByTagName('tbody');
+			var tabled = document.getElementById("table_data");
+			var newRowContent = '<tr><td class="section">1</td><td><input type="text" name="date" class="numbersOnly" onkeypress="validate(event)" placeholder=""/></td><td><input type="text" name="reading1" class="numbersOnly" onkeypress="validate(event)" /></td><td><input type="text" name="reading2" class="numbersOnly" onkeypress="validate(event)" /></td><td><input type="text" name="reading3" class="numbersOnly" onkeypress="validate(event)" /></td><td><input type="text" name="remark"/></td></tr>';
+			//<button type="button" name="delete_row" class="glyphicon glyphicon-remove-sign" onclick="deleteRow(this)"></button> #delete button
+			//rows = table.insertRow(z);
+			 if (tabled.rows.length > 0) {
+                $("#table_data tbody tr").remove(); 
+                for(i = 0; i < z+1; i++){	
+					$('#table_data > tbody').append(newRowContent);
+				}
+            }
+            getDates();
+
+	}
+
+	function getDates(sDate, eDate) {
+		      var dateArray = new Array();
+		      var startDate = new Date(x);
+		      var endDate = new Date(y);
+		      while (startDate >= endDate) {
+		        dateArray.push(startDate)
+		        startDate = startDate.addDays(z);
+		      }
+		      return dateArray;
+			for (i = 0; i < dateArray.length; i ++ ) {
+			    alert (dateArray[i]);
+			}
+		    }
+
+			
+
+ 
+	/*
+	$('#feature_id').on("change", function(){
+  			$.get("fetch_options2/"+$('#feature_id').val(),
+    		function (data){
+      			$('#parameter_id').html(data);
+    				}
+		, "html")
+	}); */
+	function deleteRow(t)
+		{
+		    var row = t.parentNode.parentNode;
+		    document.getElementById("table_data").deleteRow(row.rowIndex);
+		    console.log(row);
+		}
+	function validate(evt) {
+		  var theEvent = evt || window.event;
+		  var key = theEvent.keyCode || theEvent.which;
+		  key = String.fromCharCode( key );
+		  var regex = /[0-9]|\./;
+	  if( !regex.test(key) ) {
+	    theEvent.returnValue = false;
+	    alert('Input integers only');
+	    if(theEvent.preventDefault) theEvent.preventDefault();
+	  }
+	}
+
+	$(document).ready(
+                     function() {
+                         $("select#feature").change(function() {
+                             if ($(this).val() == 'Z') {
+                                 $("select#parameter").html("<option>Select parameter</option>");
+                                 $("select#parameter").attr('disabled', true);
+                             }
+                             else {
+                                 var url = "/feature/" + $(this).val() + "/all_json_models";
+                                 var brand = $(this).val();
+                                 $.getJSON(url, function(models) {
+                                     var options = '<option value="Z">Select parameter</option>';
+                                     for (var i = 0; i < models.length; i++) {
+                                        options += '<option value="' + models[i].fields['id'] + '">' + models[i].fields['name'] + '</option>';
+                                     }
+                                     $("select#parameter").html(options);
+                                     $("select#parameter option:first").attr('selected', 'selected');
+                                     $("select#parameter").attr('disabled', false);
+                                 });
+                             }
+                         });
+
+
+                         $("select#feature").change(function(vent) {
+                             if ($(this).val() == -1) {
+                                 return;
+                             }
+                             //myAwesomeFunctionToCallWhenAModelIsSelected();
+                         });
+                     });
+    
+
+	/*
+	function dayGet(){
+		var selectNumber = document.getElementById("selectNumber");
+		if (selectNumber){
+			var options = 32;
+			for(var i = 1; i < options; i++) {
+			    var opt = i;
+			    var el = document.createElement("option");
+			    el.textContent = opt;
+			    el.value = opt;
+			    selectNumber.appendChild(el);
+			}
+		}
+	}
+	function getTime(){
+		var selectTime = document.getElementById("selectTime");
+		if (selectTime){
+			var options = 25;
+				for(var i = 1; i < options; i++) {
+				    var opt = i;
+				    var el = document.createElement("option");
+				    el.textContent = opt;
+				    el.value = opt;
+				    selectTime.appendChild(el);
+				}
+			}
+	}	*/	
+	
+</script>
+{% endblock footer_content %}
+
 {% endblock application_content %}

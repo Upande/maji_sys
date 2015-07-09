@@ -2,9 +2,12 @@
 
 {% block title %}MajiSYS - Data Entry Form{% endblock title %}
 {% block extra_head %}
+<link href="{{ STATIC_URL }}css/c3.css" rel="stylesheet" type="text/css">
+
 <script src="{{ STATIC_URL }}js/react.min.js"></script>
 <script src="{{ STATIC_URL }}js/moment.js"></script>
-<script src="{{ STATIC_URL }}js/Chart.js"></script>
+<script src="{{ STATIC_URL }}js/d3.js" charset="utf-8"></script>
+<script src="{{ STATIC_URL }}js/c3.js"></script>
 <style>
         table{counter-reset:section;}
                 .count:before
@@ -107,11 +110,11 @@
 	    </div>
 	  </form>
 	</div>
-	<div class="col-md-5">
+	<div class="col-md-7">
 	  <!--Contact details were here. Removed them -->
 	  <h2 class="intro-text text-center"> Chart </h2>
 	  <div class="row">
-	    <canvas id="majichart" width="700" height="400"></canvas>
+	    <div id="chart"></div>
 	  </div>
 	</div>
 	<div class="clearfix"></div>
@@ -160,15 +163,18 @@
   var x
   var y
   var z
-  
+  var dates = ['Time','30-06-2015']
+  var read1 = ['reading1',1]
+  var read2 = ['reading2',2] 
+  var read3 = ['reading3',3]
+
   $(function(){
-  drawChart();
+//  drawChart();
   $('#datetimepicker1').datetimepicker({format: 'YYYY-MM-DD'});
   $('#datetimepicker2').datetimepicker({format: 'YYYY-MM-DD'});
   $("#datetimepicker1").on("dp.change", function (e) {
   $('#datetimepicker2').data("DateTimePicker").minDate(e.date);
   x=document.getElementById("startdate").value;
-  //drawTable();
   
   });
   $("#datetimepicker2").on("dp.change", function (e) {
@@ -178,171 +184,123 @@
   });
   });
   
-  function drawTable(){
-  var date1 = new Date(y);
-  var date2 = new Date(x);
-  var timeDiff = Math.abs(date2.getTime() - date1.getTime());
-  var z= Math.ceil(timeDiff / (1000 * 3600 * 24)); 
-  var table = document.getElementById("table_data").getElementsByTagName('tbody');
-  var tabled = document.getElementById("table_data");
-                  var itemcount = 1;
-                  var dte = date2;
-                  var countContent= '<tr><td class="section">';
-                        var dateContent = '</td><td><input type="date" name="date" class="dateonly" value=' 
-							   var newRowContent = ' placeholder="" disabled/></td><td><input type="text" name="reading1" class="numbersOnly" onkeypress="validate(event)" /></td><td><input type="text" name="reading2" class="numbersOnly" onkeypress="validate(event)" /></td><td><input type="text" name="reading3" class="numbersOnly" onkeypress="validate(event)" /></td><td><input type="text" name="remark"/></td></tr>';
-  //<button type="button" name="delete_row" class="glyphicon glyphicon-remove-sign" onclick="deleteRow(this)"></button> #delete button
-  //rows = table.insertRow(z);
-   if (tabled.rows.length > 0) {
-                $("#table_data tbody tr").remove(); 
-                for(i = 0; i < z+1; i++){
-			              //keep track of first date. Increment based on the variable
-			              html = countContent + String(itemcount) + dateContent + moment(dte).format('YYYY-MM-DD') + newRowContent;  
-			       itemcount ++;              
-			              dte = moment(dte).add('days',1);
-			              $('#table_data > tbody').append(html);
-  
-    }
-            }
-            getDates();
-            drawChart();
+function drawTable() {
+    var date1 = new Date(y);
+    var date2 = new Date(x);
+    var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+    var z = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    var table = document.getElementById('table_data').getElementsByTagName('tbody');
+    var tabled = document.getElementById('table_data');
+    var itemcount = 1;
+    var dte = date2;
+//    dates.push(moment(dte).format('DD-MM-YYYY'))
+    var countContent = '<tr><td class="section">';
+    var dateContent = '</td><td><input type="date" name="date" class="dateonly" value='
+    var newRowContent = ' placeholder="" disabled/></td><td><input type="text" name="reading1" class="numbersOnly" onkeypress="validate(event)" /></td><td><input type="text" name="reading2" class="numbersOnly" onkeypress="validate(event)" /></td><td><input type="text" name="reading3" class="numbersOnly" onkeypress="validate(event)" /></td><td><input type="text" name="remark"/></td></tr>';
+    //<button type="button" name="delete_row" class="glyphicon glyphicon-remove-sign" onclick="deleteRow(this)"></button> #delete button                                                          
+    //rows = table.insertRow(z);
 
-    }
 
-  function getDates(sDate, eDate) {
-  var dateArray = new Array();
-  var startDate = new Date(x);
-  var endDate = new Date(y);
-  while (startDate >= endDate) {
-  dateArray.push(startDate)
-  startDate = startDate.addDays(z);
+    if (tabled.rows.length > 0) {
+        $("#table_data tbody tr").remove();
+        for (i = 0; i < z + 1; i++) {
+            //keep track of first date. Increment based on the variable
+            html = countContent + String(itemcount) + dateContent + moment(dte).format('YYYY-MM-DD') + newRowContent;
+            
+	    read1.push(1)
+	    read2.push(2)
+	    read3.push(3)
+	    dates.push(moment(dte).format('DD-MM-YYYY'))
+
+            itemcount++;
+            dte = moment(dte).add(1,'days');
+
+            $('#table_data > tbody').append(html);
+
+        }
+    }
+ drawChart();
+}		  
+  /*
+  $('#feature_id').on("change", function(){
+  $.get("fetch_options2/"+$('#feature_id').val(),
+  function (data){
+  $('#parameter_id').html(data);
   }
-  return dateArray;
-  for (i = 0; i < dateArray.length; i ++ ) {
-		  alert (dateArray[i]);
-		  }
-		  }
-		  
-		  /*
-		  $('#feature_id').on("change", function(){
-		  $.get("fetch_options2/"+$('#feature_id').val(),
-		  function (data){
-		  $('#parameter_id').html(data);
-		  }
-		  , "html")
-		  }); */
-		  function deleteRow(t)
-		  {
-		  var row = t.parentNode.parentNode;
-		  document.getElementById("table_data").deleteRow(row.rowIndex);
-		  console.log(row);
-		  }
-		  function validate(evt) {
-		  var theEvent = evt || window.event;
-		  var key = theEvent.keyCode || theEvent.which;
-		  key = String.fromCharCode( key );
-		  var regex = /[0-9]|\./;
-		  if( !regex.test(key) ) {
-		  theEvent.returnValue = false;
-		  alert('Input integers only');
-		  if(theEvent.preventDefault) theEvent.preventDefault();
-		  }
-		  }
-		  
-		  $(document).ready(
-                  function() {
-                  $("select#feature").change(function() {
-                  if ($(this).val() == 'Z') {
-                  $("select#parameter").html("<option>Select parameter</option>");
-                  $("select#parameter").attr('disabled', true);
-                  }
-                  else {
-                  var url = "/feature/" + $(this).val() + "/all_json_models";
-                  var brand = $(this).val();
-                  $.getJSON(url, function(models) {
-                  var options = '<option value="Z">Select parameter</option>';
-                  for (var i = 0; i < models.length; i++) {
-                                      options += '<option value="' + models[i].fields['id'] + '">' + models[i].fields['name'] + '</option>';
-                                      }
-                                      $("select#parameter").html(options);
-                                      $("select#parameter option:first").attr('selected', 'selected');
-                                      $("select#parameter").attr('disabled', false);
-                                      });
-				      }
-				      });
-				      
-				      
-				      $("select#feature").change(function(vent) {
-				      if ($(this).val() == -1) {
-                                      return;
-				      }
-				      //myAwesomeFunctionToCallWhenAModelIsSelected();
-				      });
-				      });
-				      
-				      
-				      /*
-				      function dayGet(){
-				      var selectNumber = document.getElementById("selectNumber");
-				      if (selectNumber){
-				      var options = 32;
-				      for(var i = 1; i < options; i++) {
-							 var opt = i;
-							 var el = document.createElement("option");
-							 el.textContent = opt;
-							 el.value = opt;
-							 selectNumber.appendChild(el);
-							 }
-							 }
-							 }
-							 function getTime(){
-							 var selectTime = document.getElementById("selectTime");
-							 if (selectTime){
-							 var options = 25;
-							 for(var i = 1; i < options; i++) {
-									    var opt = i;
-									    var el = document.createElement("option");
-									    el.textContent = opt;
-									    el.value = opt;
-									    selectTime.appendChild(el);
-									    }
-									    }
-									    }*/
+  , "html")
+  }); */
+  
+  
+  $(document).ready(
+  
+  function() {
+  $("select#feature").change(function() {
+  if ($(this).val() == 'Z') {
+  $("select#parameter").html("<option>Select parameter</option>");
+  $("select#parameter").attr('disabled', true);
+  }
+  else {
+  var url = "/feature/" + $(this).val() + "/all_json_models";
+  var brand = $(this).val();
+  $.getJSON(url, function(models) {
+  var options = '<option value="Z">Select parameter</option>';
+  for (var i = 0; i < models.length; i++) {
+                      options += '<option value="' + models[i].fields['id'] + '">' + models[i].fields['name'] + '</option>';
+                      }
+                      $("select#parameter").html(options);
+                      $("select#parameter option:first").attr('selected', 'selected');
+                      $("select#parameter").attr('disabled', false);
+                      });
+		      }
+		      });
+		      
+		      
+		      $("select#feature").change(function(vent) {
+		      if ($(this).val() == -1) {
+                      return;
+		      }
+		      //myAwesomeFunctionToCallWhenAModelIsSelected();
+		      });
+		      });
+		      
+		      
 											       
-  function drawChart(){
-  var date1 = new Date(y);
-  var date2 = new Date(x);
-  Chart.defaults.global.responsive = true;
-  var ctx = document.getElementById("majichart").getContext("2d");
+		      function drawChart(){
+		      var chart = c3.generate({
+		      bindto: '#chart',
+		      data: {
+		      x:'Time',
+		      columns: [
+//		      ["Time", "01-07-2015", "02-07-2015", "03-07-2015", "04-07-2015", "05-07-2015", "06-07-2015", "07-07-2015", "08-07-2015", "09-07-2015"],
+		      dates,
+		      read1,
+		      read2,
+		      read3,
+		      ],
+		      xFormat: '%d-%m-%Y',
 
-									    var data = {
-									    labels: ["January", "February", "March", "April", "May", "June", "July"],
-									    datasets: [
-									    {
-									    label: "My First dataset",
-									    fillColor: "rgba(220,220,220,0.2)",
-									    strokeColor: "rgba(220,220,220,1)",
-									    pointColor: "rgba(220,220,220,1)",
-									    pointStrokeColor: "#fff",
-									    pointHighlightFill: "#fff",
-									    pointHighlightStroke: "rgba(220,220,220,1)",
-									    data: [65, 59, 80, 81, 56, 55, 40]
-									    },
-									    {
-									    label: "My Second dataset",
-									    fillColor: "rgba(151,187,205,0.2)",
-									    strokeColor: "rgba(151,187,205,1)",
-									    pointColor: "rgba(151,187,205,1)",
-									    pointStrokeColor: "#fff",
-									    pointHighlightFill: "#fff",
-									    pointHighlightStroke: "rgba(151,187,205,1)",
-									    data: [28, 48, 40, 19, 86, 27, 90]
-									    }
-									    ]
-									    };
-									    
-
-  var myNewChart = new Chart(ctx).Line(data);
-									    }
+		      },
+		      axis: {
+		      x: {
+		      type: 'timeseries',
+		      tick: {
+                      format: '%d-%m-%Y'
+		      }
+		      }
+		      }
+		      });
+		      }
+		      function validate(evt) {
+		      var theEvent = evt || window.event;
+		      var key = theEvent.keyCode || theEvent.which;
+		      key = String.fromCharCode( key );
+		      var regex = /[0-9]|\./;
+		      if( !regex.test(key) ) {
+		      theEvent.returnValue = false;
+		      alert('Input integers only');
+		      if(theEvent.preventDefault) theEvent.preventDefault();
+		      }
+		      }
 
 </script>
 

@@ -18,101 +18,111 @@
 {% endblock extra_head %}
 {% block application_content %}
 <div class="row">
-	<form action='dataform' class="form-horizontal" method="POST">{% csrf_token %}
-		<div class="row">
-			<div class="col-md-6 form-group">
-				<label class="col-sm-3 control-label">Feature</label>
-				<div class="col-sm-8">
-					<select id="feature" name="feature" class="form-control">
-						<option value="Z">-Select Feature-</option>
-						{% for f in features %}
-						<option value="{{ f.featureclasskey }}">{{ f.featureclass }}</option>
-						{% endfor %}
-					</select>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-6 form-group">
-				<label class="col-sm-3 control-label">Parameter</label>
-				<div class="col-sm-8">
-					<select id = "parameter" name="parameter" class="form-control" disabled="true">
-						<option>-Select Parameter-</option>	
-					</select>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-6 form-group" align="center">
-				<label class="col-sm-3 control-label">Location:</label>
-				<div class="col-sm-8">
-					<select name="location" class="form-control">
-						<option>-Select Location-</option>
-						{% for location in locations %}
-						<option value="{{ location.locationkey }}">{{ location.id }}</option>
-						{% endfor %}
-					</select>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-sm-6 form-group">
-				<label class="col-sm-3 control-label">Observer:</label>
-				<div class="col-sm-8">
-					<input name="observer" class="form-control" readonly="true" value="{{ request.user.username }}">
-				</div>
-			</div>
-		</div>
+  <div class="main col-lg-12 myHalfCol">  
+    <div class="col-lg-6">
+      <form action='dataform' class="form-horizontal" method="POST">{% csrf_token %}
 	<div class="row">
-		<div class="col-md-6 form-group" align="center">
-			<label class="col-sm-3 control-label">Start date:</label>
-            	<div class='col-sm-5 input-group date' id='datetimepicker1'>
-	                <input type='text' class="form-control" name="startdate" id="startdate" value=""/>
-	                <span class="input-group-addon">
-	                    <span class="glyphicon glyphicon-calendar"></span>
-	                </span>
-            </div>
-        </div>
-     </div>
-     <div class="row">
-	    <div class="col-md-6 form-group" align="center">
-	    	<label class="col-sm-3 control-label">End date:</label>
-	            <div class='col-sm-5 input-group date' id='datetimepicker2'>
-		            <input type='text' class="form-control" name="enddate" id="enddate" value=""/>
-		            <span class="input-group-addon">
-		              <span class="glyphicon glyphicon-calendar"></span>
-		            </span>
-	            </div>
+	  <div class="col-md-6 form-group">
+	    <label class="col-sm-3 control-label">Feature</label>
+	    <div class="col-sm-8">
+	      <select id="feature" name="feature" class="form-control">
+		<option value="Z">-Select Feature-</option>
+		{% for f in features %}
+		<option value="{{ f.featureclasskey }}">{{ f.featureclass }}</option>
+		{% endfor %}
+	      </select>
 	    </div>
-     </div>
-     <div class="row">
-       <div class="col-md-5 form-group" align="right">
-	 <button type="button" id="add_entry" class="btn btn-info btn-md" onclick="drawTable()">GO</button>
-       </div>
-     </div>
-     <hr />
-     <b><legend class="col-sm-3">Form</legend></b>			
-     <table id="table_data" class="table table-stripped">
-       <thead>
-	 <tr>
-	   <th class="col-sm-1"></th>
-	   <th class="col-sm-1" align="center">Date</th>
-	   <th class="col-sm-1" align="center">Reading 1</th>
-	   <th class="col-sm-1" align="center">Reading 2</th>
-	   <th class="col-sm-1" align="center">Reading 3</th>
-	   <th class="col-sm-1" align="center">Remarks</th>
-	   <!--th class="col-sm-1">Delete</th-->
-	 </tr>
-       </thead>
-       <tbody>
-       </tbody>
-     </table>
-     <div class="form-final">
-       <button type="submit" class="btn btn-primary">submit</button>
-       <a href="{% url 'data_form' %}" class="btn btn-defualt">Cancel</a>
-     </div>
-	</form>
-</div>
+	  </div>
+	</div>
+	<div class="row">
+	  <div class="col-md-6 form-group">
+	    <label class="col-sm-3 control-label">Parameter</label>
+	    <div class="col-sm-8">
+	      <select id = "parameter" name="parameter" class="form-control" disabled="true">
+		<option>-Select Parameter-</option>	
+	      </select>
+	    </div>
+	  </div>
+	</div>
+	<div class="row">
+	  <div class="col-md-6 form-group" align="center">
+	    <label class="col-sm-3 control-label">Location:</label>
+	    <div class="col-sm-8">
+	      <select name="location" class="form-control">
+		<option>-Select Location-</option>
+		{% for location in locations %}
+		<option value="{{ location.locationkey }}">{{ location.id }}</option>
+		{% endfor %}
+	      </select>
+	    </div>
+	  </div>
+	</div>
+	<div class="row">
+	  <div class="col-sm-6 form-group">
+	    <label class="col-sm-3 control-label">Observer:</label>
+	    <div class="col-sm-8">
+	      <input name="observer" class="form-control" readonly="true" value="{{ request.user.username }}">
+	    </div>
+	  </div>
+	</div>
+	<div class="row">
+	  <div class="col-md-6 form-group" align="center">
+	    <label class="col-sm-3 control-label">Start date:</label>
+            <div class='col-sm-5 input-group date' id='datetimepicker1'>
+	      <input type='text' class="form-control" name="startdate" id="startdate" value=""/>
+	      <span class="input-group-addon">
+	        <span class="glyphicon glyphicon-calendar"></span>
+	      </span>
+            </div>
+          </div>
+	</div>
+	<div class="row">
+	  <div class="col-md-6 form-group" align="center">
+	    <label class="col-sm-3 control-label">End date:</label>
+	    <div class='col-sm-5 input-group date' id='datetimepicker2'>
+	      <input type='text' class="form-control" name="enddate" id="enddate" value=""/>
+	      <span class="input-group-addon">
+		<span class="glyphicon glyphicon-calendar"></span>
+	      </span>
+	    </div>
+	  </div>
+	</div>
+	<div class="row">
+	  <div class="col-md-5 form-group" align="right">
+	    <button type="button" id="add_entry" class="btn btn-info btn-md" onclick="drawTable()">GO</button>
+	  </div>
+	</div>
+    </div>
+    <div class="col-lg-6">
+      <h3>Chart</h3>
+    </div>
+    <div class="col-lg-6">
+      <hr />
+      <b><legend class="col-sm-3">Form</legend></b>			
+      <table id="table_data" class="table table-stripped">
+	<thead>
+	  <tr>
+	    <th class="col-sm-1"></th>
+	    <th class="col-sm-1" align="center">Date</th>
+	    <th class="col-sm-1" align="center">Reading 1</th>
+	    <th class="col-sm-1" align="center">Reading 2</th>
+	    <th class="col-sm-1" align="center">Reading 3</th>
+	    <th class="col-sm-1" align="center">Remarks</th>
+	    <!--th class="col-sm-1">Delete</th-->
+	  </tr>
+	</thead>
+	<tbody>
+	</tbody>
+      </table>
+      <div class="col-lg-6">
+	<div class="form-final">
+	  <button type="submit" class="btn btn-primary">submit</button>
+	  <a href="{% url 'data_form' %}" class="btn btn-defualt">Cancel</a>
+	</div>
+      </div>
+    </form>
+    </div>
+  </div>
 
 {% block footer_content %}
 <script>

@@ -23,7 +23,7 @@ class IndexView(TemplateView):
 
 
 class DataForm(LoginRequiredMixin, TemplateView):
-	template_name = 'data_form.html'
+	template_name = 'dataform.html'
 
 	def get_context_data(self, **kwargs):
 		context = super(DataForm, self).get_context_data(**kwargs)

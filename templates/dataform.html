@@ -163,10 +163,10 @@
   var x
   var y
   var z
-  var dates = ['Time','30-06-2015']
-  var read1 = ['reading1',1]
-  var read2 = ['reading2',2] 
-  var read3 = ['reading3',3]
+  var dates = ['Time']
+  var read1 = ['reading1']
+  var read2 = ['reading2'] 
+  var read3 = ['reading3']
 
   $(function(){
 //  drawChart();
@@ -196,20 +196,23 @@ function drawTable() {
 //    dates.push(moment(dte).format('DD-MM-YYYY'))
     var countContent = '<tr><td class="section">';
     var dateContent = '</td><td><input type="date" name="date" class="dateonly" value='
-    var newRowContent = ' placeholder="" disabled/></td><td><input type="text" name="reading1" class="numbersOnly" onkeypress="validate(event)" /></td><td><input type="text" name="reading2" class="numbersOnly" onkeypress="validate(event)" /></td><td><input type="text" name="reading3" class="numbersOnly" onkeypress="validate(event)" /></td><td><input type="text" name="remark"/></td></tr>';
-    //<button type="button" name="delete_row" class="glyphicon glyphicon-remove-sign" onclick="deleteRow(this)"></button> #delete button                                                          
-    //rows = table.insertRow(z);
+    var newRowContent = ' placeholder="" disabled/></td><td><input type="text" name="reading1" class="numbersOnly" id='
+    var reading1col = ' onkeypress="validate(event)" onblur="plotValue(this)" /></td><td><input type="text" name="reading2" class="numbersOnly" id='
+    var reading2col = ' onkeypress="validate(event)" onblur="plotValue(this)" /></td><td><input type="text" name="reading3" class="numbersOnly" id=' 
+    var reading3col = ' onkeypress="validate(event)" onblur="plotValue(this)" /></td><td><input type="text" name="remark"/></td></tr>';
 
+   //<button type="button" name="delete_row" class="glyphicon glyphicon-remove-sign" onclick="deleteRow(this)"></button> #delete button             
+    //rows = table.insertRow(z);
 
     if (tabled.rows.length > 0) {
         $("#table_data tbody tr").remove();
         for (i = 0; i < z + 1; i++) {
             //keep track of first date. Increment based on the variable
-            html = countContent + String(itemcount) + dateContent + moment(dte).format('YYYY-MM-DD') + newRowContent;
+            html = countContent + String(itemcount) + dateContent + moment(dte).format('YYYY-MM-DD') + newRowContent + String(itemcount) + reading1col + String(itemcount) + reading2col + String(itemcount) + reading3col;
             
-	    read1.push(1)
-	    read2.push(2)
-	    read3.push(3)
+	    read1.push(0)
+	    read2.push(0)
+	    read3.push(0)
 	    dates.push(moment(dte).format('DD-MM-YYYY'))
 
             itemcount++;
@@ -271,7 +274,6 @@ function drawTable() {
 		      data: {
 		      x:'Time',
 		      columns: [
-//		      ["Time", "01-07-2015", "02-07-2015", "03-07-2015", "04-07-2015", "05-07-2015", "06-07-2015", "07-07-2015", "08-07-2015", "09-07-2015"],
 		      dates,
 		      read1,
 		      read2,
@@ -290,6 +292,33 @@ function drawTable() {
 		      }
 		      });
 		      }
+
+		      function plotValue(element)
+		      {
+		      name = element.name
+		      id = element.id
+		      value = element.value
+ 
+		      console.log(element.name);
+		      console.log(element.id);
+		      console.log(element.value);
+		      
+		      if (name == "reading1")
+		      {
+		      read1[id] = value;
+		      }
+		      
+		      else if (name == "reading2")
+		      {
+		      read2[id] = value;
+		      }
+		      else if (name == "reading3")
+		      {
+		      read3[id] = value;
+		      }
+		      drawChart();
+		      }
+		      
 		      function validate(evt) {
 		      var theEvent = evt || window.event;
 		      var key = theEvent.keyCode || theEvent.which;

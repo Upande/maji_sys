@@ -134,21 +134,23 @@
 	<hr>
 	<p>Enter Readings here</p>
 	<div class="col-lg-12">
-	  <table id="table_data" class="table table-stripped">
-	    <thead>
-	      <tr>
-		<th class="col-lg-1"></th>
-		<th class="col-lg-2" align="center">Date</th>
-		<th class="col-lg-2" align="center">Reading 1</th>
-		<th class="col-lg-2" align="center">Reading 2</th>
-		<th class="col-lg-2" align="center">Reading 3</th>
-		<th class="col-lg-2" align="center">Remarks</th>
-		<!--th class="col-sm-1">Delete</th-->
-	      </tr>
-	    </thead>
-	    <tbody>
-	    </tbody>
-	  </table>
+	  <div class="table-responsive">
+	    <table id="table_data" class="table table-stripped">
+	      <thead>
+		<tr>
+		  <th class="col-lg-1"></th>
+		  <th class="col-lg-2" align="center">Date</th>
+		  <th class="col-lg-2" align="center">Reading 1</th>
+		  <th class="col-lg-2" align="center">Reading 2</th>
+		  <th class="col-lg-2" align="center">Reading 3</th>
+		  <th class="col-lg-2" align="center">Remarks</th>
+		  <!--th class="col-sm-1">Delete</th-->
+		</tr>
+	      </thead>
+	      <tbody>
+	      </tbody>
+	    </table>
+	  </div>
 	</div>
       </div>
     </div>
@@ -195,7 +197,7 @@ function drawTable() {
     var dte = date2;
 //    dates.push(moment(dte).format('DD-MM-YYYY'))
     var countContent = '<tr><td class="section">';
-    var dateContent = '</td><td><input type="date" name="date" class="dateonly" value='
+    var dateContent = '</td><td><input type="text" name="date" class="dateonly" value='
     var newRowContent = ' placeholder="" disabled/></td><td><input type="text" name="reading1" class="numbersOnly" id='
     var reading1col = ' onkeypress="validate(event)" onblur="plotValue(this)" /></td><td><input type="text" name="reading2" class="numbersOnly" id='
     var reading2col = ' onkeypress="validate(event)" onblur="plotValue(this)" /></td><td><input type="text" name="reading3" class="numbersOnly" id=' 

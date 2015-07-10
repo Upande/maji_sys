@@ -12,7 +12,7 @@ DATABASES = {
             'OPTIONS': {
                 'options': '-c search_path=fews,public'
             },
-            'NAME': 'majisysmg',
+            'NAME': 'wrma_final_db',
             'USER': 'postgres',
             'PASSWORD': 'postgres',
             'HOST': '127.0.0.1',

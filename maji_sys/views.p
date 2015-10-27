@@ -29,6 +29,9 @@ class DataForm(LoginRequiredMixin, TemplateView):
 	def get_context_data(self, **kwargs):
 		context = super(DataForm, self).get_context_data(**kwargs)
 		features = Features.objects.all()
+		print features
+		for f in features:
+			print f
 		locations = Locations.objects.all()
 		parameters_list = Parameterstable.objects.all()
 		context.update(locals())

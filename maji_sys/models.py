@@ -14,11 +14,11 @@ class Aggregationperiods(models.Model):
 
 class Features(models.Model):
     featureclasskey = models.IntegerField(primary_key=True)
-    featureclass = models.CharField(max_length=255, blank=True)
+    featureclassname = models.CharField(max_length=255, blank=True)
 
     class Meta:
         managed = False
-        db_table = 'feature_class'
+        db_table = 'featureclass'
 
 class Filters(models.Model):
 	filterkey = models.IntegerField(primary_key=True)
@@ -91,7 +91,7 @@ class Locations(models.Model):
 	x = models.FloatField()
 	y = models.FloatField()
 	z = models.FloatField(blank=True, null=True)
-	wgs_geom = models.TextField(blank=True)  # This field type is a guess.
+	#wgs_geom = models.TextField(blank=True)  # This field type is a guess.
 	area = models.FloatField(blank=True, null=True)
 	relationalocationid = models.CharField(max_length=64, blank=True)
 	relationblocationid = models.CharField(max_length=64, blank=True)
@@ -164,7 +164,7 @@ class Locations(models.Model):
     x = models.FloatField()
     y = models.FloatField()
     z = models.FloatField(blank=True, null=True)
-    wgs_geom = models.TextField(blank=True)  # This field type is a guess.
+    #wgs_geom = models.TextField(blank=True)  # This field type is a guess.
     area = models.FloatField(blank=True, null=True)
     relationalocationid = models.CharField(max_length=64, blank=True)
     relationblocationid = models.CharField(max_length=64, blank=True)

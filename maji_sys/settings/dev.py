@@ -1,6 +1,6 @@
 from base import *
 
-import dj_database_url
+# import dj_database_url
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
@@ -12,9 +12,9 @@ DATABASES = {
             'OPTIONS': {
                 'options': '-c search_path=fews,public'
             },
-            'NAME': 'wrma_final_db',
+            'NAME': 'maji_base',
             'USER': 'postgres',
-            'PASSWORD': 'postgres',
+            'PASSWORD': 'Maj1s3rv3r',
             'HOST': '127.0.0.1',
             'PORT': '5432',
     }

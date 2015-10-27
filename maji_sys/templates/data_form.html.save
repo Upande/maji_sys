@@ -23,13 +23,13 @@
       <form action='dataform' class="form-horizontal" method="POST">{% csrf_token %}
 	<div class="row">
 	  <div class="col-md-6 form-group">
-	<label class="col-sm-3 control-label">PAUL</label>
 	    <label class="col-sm-3 control-label">Feature</label>
-	    <div id="paul" class="col-sm-8">
+	    <div class="col-sm-8">
 	      <select id="feature" name="feature" class="form-control">
 		<option value="Z">-Select Feature-</option>
 		{% for f in features %}
-		<option value="{{ f.featureclasskey }}">test</option>
+		<option value="{{ f.featureclasskey<option value="Z">-Select Feature-</option>
+ }}">test</option>
 		{% endfor %}
 	      </select>
 	    </div>

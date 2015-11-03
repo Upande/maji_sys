@@ -17,7 +17,12 @@ def all_json_models(request, feature):
                 current_brand = Features.objects.get(featureclasskey=feature)
                 print current_brand.featureclasskey
 		print current_brand.featureclassname
-                models = Parameterstable.objects.raw('select * from fews.parameterstable where featureclasskey=%s'%(current_brand.featureclasskey))
+                models = Parameterstable.objects.raw('select fews.parameterstable.id, fews.parameterstable.name,fews.parameterstable.groupkey,fews.parametergroups.unit,fews.parameterstable.parameterkey  from fews.parameterstable INNER JOIN fews.parametergroups ON (fews.parameterstable.groupkey = fews.parametergroups.groupkey) where fews.parameterstable.featureclasskey=%s'%(current_brand.featureclasskey))
+                
+                print models
+                for i in models:
+                                print i.unit
+
                 json_models = serializers.serialize("json", models)
                 return HttpResponse(json_models, content_type="application/javascript")
 
@@ -47,6 +52,7 @@ def submit(request):
 	q1_values = list(q1.values())
 	for x in q1_values:
 		gk_id = x['groupkey_id']
+
 	q2 = Parametergroups.objects.filter(groupkey=gk_id)
 	q2_values = list(q2.values())
 	for y in q2_values:

@@ -262,6 +262,7 @@ function drawTable() {
   $.getJSON(url, function(models) {
   var options = '<option value="Z">Select parameter</option>';
   for (var i = 0; i < models.length; i++) {
+		      console.log(models[i].fields['unit']);
                       options += '<option value="' + models[i].fields['id'] + '">' + models[i].fields['name'] + '</option>';
                       }
                       $("select#parameter").html(options);

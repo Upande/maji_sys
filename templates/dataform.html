@@ -22,7 +22,7 @@
 {% endblock extra_head %}
 
 {% block main_content %}
-
+ <form action="{% url 'submit' %}" class="form-horizontal" method="post">{% csrf_token %}
 <div class="container">
   
   <div class="row">
@@ -34,15 +34,19 @@
         </h2>
         <hr>
         <div class="col-md-5">
-	  <!-- An Iframe sat here. Need to reuse space for something else -->
+	  		<!-- An Iframe sat here. Need to reuse space for something else -->
+	  {% for message in messages %}
+    		<div class="alert alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+		
 	  <h2 class="intro-text text-center"> Form </h2>
-	  <form action='dataform' class="form-horizontal" method="POST">{% csrf_token %}
+	 
 	    <div class="row">
 	      <div class="col-md-12 form-group">
 		<label class="col-sm-4 control-label">Feature</label>
 		<div class="col-sm-8">
-		  <select id="feature" name="feature" class="form-control">
-		    <option value="Z">-Select Feature-</option>
+		  <select id="feature" name="feature" class="form-control alert-alert-warning">
+		    <option value="Z" disabled selected>-Select Feature-</option>
 		    {% for f in features %}
 		    <option value="{{ f.featureclasskey }}">{{ f.featureclassname }}</option>
 		    {% endfor %}
@@ -55,7 +59,7 @@
 		<label class="col-sm-4 control-label">Parameter</label>
 		<div class="col-sm-8">
 		  <select id = "parameter" name="parameter" class="form-control" disabled="true">
-		    <option>-Select Parameter-</option>
+		    <option disabled selected>-Select Parameter-</option>
 		  </select>
 		</div>
 	      </div>
@@ -65,7 +69,7 @@
 		<label class="col-sm-4 control-label">Location:</label>
 		<div class="col-sm-8">
 		  <select name="location" class="form-control">
-		    <option>-Select Location-</option>
+		    <option disabled selected>-Select Location-</option>
 		    {% for location in locations %}
 		    <option value="{{ location.locationkey }}">{{ location.shortname }}</option>
 		    {% endfor %}
@@ -73,6 +77,7 @@
 		</div>
 	      </div>
 	    </div>
+
 	    <div class="row">
 	      <div class="col-sm-12 form-group" align="center">
 		<label class="col-sm-4 control-label">Observer:</label>
@@ -104,11 +109,18 @@
 	      </div>
 	    </div>
 	    <div class="row">
+	      <div class="col-md-12 form-group" align="center">
+		<label class="col-sm-4 control-label">Description:</label>
+		<div class='col-sm-8'>
+		  <input type='text' name="description" class="form-control input-lg"/>
+		</div>
+	      </div>
+	    </div>
+	    <div class="row">
 	      <div class="col-md-12 form-group" align="right">
 		<button type="button" id="add_entry" class="btn btn-info btn-md" onclick="drawTable()">GO</button>
 	      </div>
 	    </div>
-	  </form>
 	</div>
 	<div class="col-md-7">
 	  <!--Contact details were here. Removed them -->
@@ -140,8 +152,8 @@
 		<tr>
 		  <th class="col-lg-1"></th>
 		  <th class="col-lg-2" align="center">Date</th>
-		  <th class="col-lg-2" align="center">Reading 1</th>
-		  <th class="col-lg-2" align="center">Reading 2</th>
+		  <th class="col-lg-2" align="center">9:00 AM</th>
+		  <th class="col-lg-2" align="center">4:00 PM</th>
 		  <th class="col-lg-2" align="center">Remarks</th>
 		</tr>
 	      </thead>
@@ -155,6 +167,8 @@
     </div>
   </div>   
 </div>
+</form>
+
 <!-- /.container -->
 {% endblock main_content %}
 {% block footer_content %}{% endblock footer_content %}
@@ -195,9 +209,11 @@ function drawTable() {
 //    dates.push(moment(dte).format('DD-MM-YYYY'))
     var countContent = '<tr><td class="section">';
     var dateContent = '</td><td><input type="text" name="date" class="dateonly" value='
-    var newRowContent = ' placeholder="" disabled/></td><td><input type="text" name="reading1" class="numbersOnly" id='
-    var reading2col = ' onkeypress="validate(event)" onblur="plotValue(this)" /></td><td><input type="text" name="reading2" class="numbersOnly" id='
-    var remarkscol = ' onkeypress="validate(event)" /></td><td><input type="text" id="remarks" value="" name="remarks" /></td></tr>';
+    //var newRowContent = ' placeholder="" disabled/></td><td><input type="text" name="reading1" class="numbersOnly" id='
+    var reading1col = '   /></td><td><input type="text" name="reading1" class="numbersOnly" id='
+    var reading2col = ' onblur="plotValue(this)" onkeypress="validate(event)" /></td><td><input type="text" name="reading2" class="numbersOnly"  id='
+    var remarkscol = ' onkeypress="validate(event)" onblur="plotValue(this)" /></td><td><input type="text" name="remarks" id='
+    var newRowContent = ' /></td></tr>';
 
    //<button type="button" name="delete_row" class="glyphicon glyphicon-remove-sign" onclick="deleteRow(this)"></button> #delete button             
     //rows = table.insertRow(z);
@@ -206,7 +222,7 @@ function drawTable() {
         $("#table_data tbody tr").remove();
         for (i = 0; i < z + 1; i++) {
             //keep track of first date. Increment based on the variable
-            html = countContent + String(itemcount) + dateContent + moment(dte).format('YYYY-MM-DD') + newRowContent + String(itemcount) + reading2col +  String(itemcount) + remarkscol;
+            html = countContent + String(itemcount) + dateContent + moment(dte).format('YYYY-MM-DD') + reading1col + String(itemcount) + reading2col +String(itemcount) +  remarkscol + String(itemcount) + newRowContent  ;
             
 	    read1.push(0)
 	    read2.push(0)
@@ -325,11 +341,15 @@ function drawTable() {
 		      }
 
 function getEntryValues(){
+if (name == "remarks")
+	{
+		remark[id] = value;
+	}
 var aread1 = [];
 var aread2 = [];
 var aremarks = [];
 var adates = [];
-r = document.getElementById('remarks').value;
+r = document.getElementsByName('remarks').value;
 aread1.push(read1);
 aread2.push(read2);
 aremarks.push(remark);

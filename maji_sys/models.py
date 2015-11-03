@@ -3,6 +3,9 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 
+from jsonfield import JSONField
+
+
 class Aggregationperiods(models.Model):
 	aggregationperiodkey = models.IntegerField(primary_key=True)
 	id = models.CharField(unique=True, max_length=64)
@@ -92,15 +95,15 @@ class Locations(models.Model):
 	y = models.FloatField()
 	z = models.FloatField(blank=True, null=True)
 	#wgs_geom = models.TextField(blank=True)  # This field type is a guess.
-	area = models.FloatField(blank=True, null=True)
-	relationalocationid = models.CharField(max_length=64, blank=True)
-	relationblocationid = models.CharField(max_length=64, blank=True)
-	attributea = models.CharField(max_length=64, blank=True)
-	attributeb = models.FloatField(blank=True, null=True)
-	rainfall = models.NullBooleanField()
-	lake_level = models.CharField(max_length=1, blank=True)
-	harmax_h = models.FloatField(blank=True, null=True)
-	harmin_h = models.FloatField(blank=True, null=True)
+	#area = models.FloatField(blank=True, null=True)
+	#relationalocationid = models.CharField(max_length=64, blank=True)
+	#relationblocationid = models.CharField(max_length=64, blank=True)
+	#attributea = models.CharField(max_length=64, blank=True)
+	#attributeb = models.FloatField(blank=True, null=True)
+	#rainfall = models.NullBooleanField()
+	#lake_level = models.CharField(max_length=1, blank=True)
+	#harmax_h = models.FloatField(blank=True, null=True)
+	#harmin_h = models.FloatField(blank=True, null=True)
 
 	class Meta:
 		managed = False
@@ -150,36 +153,6 @@ class Layer(models.Model):
         db_table = 'layer'
 
 
-class Locations(models.Model):
-    locationkey = models.IntegerField(primary_key=True)
-    id = models.CharField(unique=True, max_length=64)
-    name = models.CharField(max_length=64, blank=True)
-    shortname = models.CharField(max_length=64, blank=True)
-    description = models.CharField(max_length=255, blank=True)
-    icon = models.CharField(max_length=64, blank=True)
-    tooltip = models.CharField(max_length=64, blank=True)
-    parentlocationid = models.CharField(max_length=64, blank=True)
-    visibilitystarttime = models.DateTimeField(blank=True, null=True)
-    visibilityendtime = models.DateTimeField(blank=True, null=True)
-    x = models.FloatField()
-    y = models.FloatField()
-    z = models.FloatField(blank=True, null=True)
-    #wgs_geom = models.TextField(blank=True)  # This field type is a guess.
-    area = models.FloatField(blank=True, null=True)
-    relationalocationid = models.CharField(max_length=64, blank=True)
-    relationblocationid = models.CharField(max_length=64, blank=True)
-    attributea = models.CharField(max_length=64, blank=True)
-    attributeb = models.FloatField(blank=True, null=True)
-    rainfall = models.NullBooleanField()
-    lake_level = models.CharField(max_length=1, blank=True)
-    harmax_h = models.FloatField(blank=True, null=True)
-    harmin_h = models.FloatField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'locations'
-
-
 class Moduleinstances(models.Model):
     moduleinstancekey = models.IntegerField(primary_key=True)
     id = models.CharField(unique=True, max_length=64)
@@ -189,23 +162,6 @@ class Moduleinstances(models.Model):
     class Meta:
         managed = False
         db_table = 'moduleinstances'
-
-
-
-class Parameterstable(models.Model):
-    parameterkey = models.IntegerField(primary_key=True)
-    groupkey = models.ForeignKey(Parametergroups, db_column='groupkey')
-    id = models.CharField(unique=True, max_length=64)
-    name = models.CharField(max_length=64, blank=True)
-    shortname = models.CharField(max_length=64, blank=True)
-    description = models.CharField(max_length=255, blank=True)
-    valueresolution = models.FloatField(blank=True, null=True)
-    attributea = models.CharField(max_length=64, blank=True)
-    attributeb = models.FloatField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'parameterstable'
 
 
 class Qualifiers(models.Model):
@@ -290,6 +246,19 @@ class SpatialRefSys(models.Model):
     class Meta:
         managed = False
         db_table = 'spatial_ref_sys'
+
+class Submissions(models.Model):
+    id = models.AutoField(primary_key=True)
+    date = models.DateTimeField(auto_now_add=True)
+    parameter_id = models.CharField(max_length=64, blank=True)
+    value_entries = JSONField()
+    location_id = models.CharField(max_length=64, blank=True)
+    unit = models.CharField(max_length=64, blank=True)
+
+    class Meta:
+        managed = False
+        db_table = 'submissions'
+        
 
 
 class Timeseriescomments(models.Model):

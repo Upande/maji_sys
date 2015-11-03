@@ -7,8 +7,10 @@ from .views import *
 
 urlpatterns = patterns('',
 	#url(r'^$', IndexView.as_view(), name='index'),
-	url(r'^$', DataForm.as_view(), name='data_form'),
-	url(r'^DataForm', DataForm.as_view(), name='data_form'),
+	url(r'^$', DataForm.as_view(), name='index'),
+	url(r'^DataForm/$', DataForm.as_view(), name='data_form'),
+	url(r'^submit/$',  submit, name='submit'),
+	#url(r'^data-form/$', submit, name='submit'),
 	url(r'^admin/', include(admin.site.urls)),
 	url(r'^accounts/login/$', 'django.contrib.auth.views.login',
 		{'template_name': 'login.html'}, name='auth_login'),

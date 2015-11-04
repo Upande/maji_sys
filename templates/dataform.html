@@ -22,7 +22,7 @@
 {% endblock extra_head %}
 
 {% block main_content %}
- <form action="{% url 'submit' %}" class="form-horizontal" method="post">{% csrf_token %}
+ <form action="{% url 'submit' %}" name="dataform" class="form-horizontal" method="post" onsubmit="ValidateForm()">{% csrf_token %}
 <div class="container">
   
   <div class="row">
@@ -160,7 +160,7 @@
 	      <tbody>
 	      </tbody>
 		</table>
-		 <input type="submit" class="btn btn-info" onclick="getEntryValues()" value="Submit">
+		 <input type="submit" class="btn btn-info"  value="Submit">
 	  </div>
 	</div>
       </div>
@@ -253,14 +253,14 @@ function drawTable() {
   function() {
   $("select#feature").change(function() {
   if ($(this).val() == 'Z') {
-  $("select#parameter").html("<option>Select parameter</option>");
+  $("select#parameter").html("<option disabled selected>Select parameter</option>");
   $("select#parameter").attr('disabled', true);
   }
   else {
   var url = "/feature/" + $(this).val() + "/all_json_models";
   var brand = $(this).val();
   $.getJSON(url, function(models) {
-  var options = '<option value="Z">Select parameter</option>';
+  var options = '<option value="Z" disabled selected>Select parameter</option>';
   for (var i = 0; i < models.length; i++) {
 		      console.log(models[i].fields['unit']);
                       options += '<option value="' + models[i].fields['id'] + '">' + models[i].fields['name'] + '</option>';
@@ -341,22 +341,13 @@ function drawTable() {
 		      }
 		      }
 
-function getEntryValues(){
-if (name == "remarks")
-	{
-		remark[id] = value;
-	}
-var aread1 = [];
-var aread2 = [];
-var aremarks = [];
-var adates = [];
-r = document.getElementsByName('remarks').value;
-aread1.push(read1);
-aread2.push(read2);
-aremarks.push(remark);
-adates.push(dates);
-console.log(aremarks.toString());
-//console.log(read2);
+function validateForm() {
+    var x = document.forms["dataform"]["feature"].value;
+    if (x == null || x == "") {
+        alert("select parameter");
+        return false;
+    }
+
 
 }
 </script>

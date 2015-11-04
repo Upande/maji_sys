@@ -1,17 +1,19 @@
 from datetime import datetime
-from django.http import HttpResponse
 
 from django.views.generic import TemplateView
 from django.shortcuts import redirect
+from django.shortcuts import render_to_response
 from django.contrib import messages
 from django.core import serializers
 from django.core.urlresolvers import reverse
-
 from django.db.models import Max
-import json
+from django.http import HttpResponse
 
 from .mixins import LoginRequiredMixin
 from .models import *
+
+import json
+
 
 def all_json_models(request, feature):
                 current_brand = Features.objects.get(featureclasskey=feature)
@@ -60,7 +62,7 @@ def submit(request):
 		for y in q2_values:
 			unit = y['unit']
 		print unit
-
+		return render_to_response('dataform.html', {'unit': unit})
 		p = dict(postdata)
 		#print type(p)
 		for k,v in p.items():

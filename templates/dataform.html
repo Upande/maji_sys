@@ -22,8 +22,26 @@
 {% endblock extra_head %}
 
 {% block main_content %}
+
+
  <form action="{% url 'submit' %}" name="dataform" class="form-horizontal" method="post" onsubmit="ValidateForm()">{% csrf_token %}
 <div class="container">
+<ul class="nav navbar-nav navbar-right">
+    {% if request.user.username %}
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            {{ request.user.username }}<span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+            <li><a href="{% url 'auth_logout' %}">logout</a></li>
+        </ul>
+    </li>
+    {% else %}
+    <li>
+        <a href="{% url 'auth_login' %}">Login</a>
+    </li>
+    {% endif %}
+ </ul>
   
   <div class="row">
     <div class="box">

@@ -80,42 +80,10 @@ def submit(request):
 		data_submission.save()
 		
 		messages.success(request, "Record added")
+		return redirect('data_form')
 	except:
 		messages.warning(request, "Parameter has not been selected")
-
-	param=(str(postdata['parameter']))
-	q1 = Parameterstable.objects.filter(id=param)
-	q1_values = list(q1.values())
-	for x in q1_values:
-		gk_id = x['groupkey']
-
-	q2 = Parametergroups.objects.filter(groupkey=gk_id)
-	q2_values = list(q2.values())
-	for y in q2_values:
-		unit = y['unit']
-	print unit
-
-	p = dict(postdata)
-	#print type(p)
-	for k,v in p.items():
-		if v == 'parameter' and v == 'location':
-			del p[v]
-	#print p
-	values_json = json.dumps(p, separators=(',',':'))
-	#print values_json
-	#current_id = Submissions.objects.all().aggregate(Max('id'))['id__max']
-
-	data_submission = Submissions(
-		parameter_id=postdata['parameter'],
-		value_entries=values_json,
-		location_id=postdata['location'],
-		unit = unit
-		)
-	data_submission.save()
-	
-	messages.success(request, "Record added")
-
-	return redirect('data_form')
+		return redirect('data_form')
 
 	'''
 def post(self, request, *args, **kwargs):

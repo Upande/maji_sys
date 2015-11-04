@@ -24,7 +24,7 @@
 {% block main_content %}
 
 
- <form action="{% url 'submit' %}" name="dataform" class="form-horizontal" method="post" onsubmit="ValidateForm()">{% csrf_token %}
+ <form action="{% url 'submit' %}" name="dataform" class="form-horizontal" method="post">{% csrf_token %}
 <div class="container">
 <ul class="nav navbar-nav navbar-right">
     {% if request.user.username %}
@@ -359,15 +359,6 @@ function drawTable() {
 		      }
 		      }
 
-function validateForm() {
-    var x = document.forms["dataform"]["feature"].value;
-    if (x == null || x == "") {
-        alert("select parameter");
-        return false;
-    }
-
-
-}
 </script>
 
 {% endblock custom_js %}

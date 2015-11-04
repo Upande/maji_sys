@@ -2,12 +2,14 @@ from datetime import datetime
 
 from django.views.generic import TemplateView
 from django.shortcuts import redirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.contrib import messages
 from django.core import serializers
+from django.core.context_processors import csrf
 from django.core.urlresolvers import reverse
 from django.db.models import Max
 from django.http import HttpResponse
+
 
 from .mixins import LoginRequiredMixin
 from .models import *
@@ -21,10 +23,11 @@ def all_json_models(request, feature):
 		print current_brand.featureclassname
                 models = Parameterstable.objects.raw('select fews.parameterstable.id, fews.parameterstable.name,fews.parameterstable.groupkey,fews.parametergroups.unit,fews.parameterstable.parameterkey  from fews.parameterstable INNER JOIN fews.parametergroups ON (fews.parameterstable.groupkey = fews.parametergroups.groupkey) where fews.parameterstable.featureclasskey=%s'%(current_brand.featureclasskey))
                 
+                '''
                 print models
                 for i in models:
                                 print i.unit
-
+                				'''
                 json_models = serializers.serialize("json", models)
                 return HttpResponse(json_models, content_type="application/javascript")
 
@@ -48,31 +51,32 @@ class DataForm(LoginRequiredMixin, TemplateView):
 def submit(request):
 	postdata = request.POST.copy()
 	print 'POSTDATA:'
-	#print postdata
+	
 
 	try:
+		c = {}
+		c.update(csrf(request))
+
 		param=(str(postdata['parameter']))
 		q1 = Parameterstable.objects.filter(id=param)
 		q1_values = list(q1.values())
+		#print q1_values
 		for x in q1_values:
 			gk_id = x['groupkey_id']
-
 		q2 = Parametergroups.objects.filter(groupkey=gk_id)
 		q2_values = list(q2.values())
+		print q2_values
 		for y in q2_values:
 			unit = y['unit']
 		print unit
-		return render_to_response('dataform.html', {'unit': unit})
 		p = dict(postdata)
-		#print type(p)
+
 		for k,v in p.items():
 			if v == 'parameter' and v == 'location':
 				del p[v]
-		#print p
+		print p
 		values_json = json.dumps(p, separators=(',',':'))
-		#print values_json
-		#current_id = Submissions.objects.all().aggregate(Max('id'))['id__max']
-
+		print values_json
 		data_submission = Submissions(
 			parameter_id=postdata['parameter'],
 			value_entries=values_json,
@@ -80,7 +84,7 @@ def submit(request):
 			unit = unit
 			)
 		data_submission.save()
-		
+	
 		messages.success(request, "Record added")
 		return redirect('data_form')
 	except:
@@ -141,4 +145,4 @@ def post(self, request, *args, **kwargs):
 	except Exception as ex:
 		print 'exception: {0}'.format(ex.message)
 	'''
-	return redirect(reverse('data_form'))
+	#return redirect(reverse('data_form'))

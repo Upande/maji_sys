@@ -2,7 +2,6 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.views.generic.base import RedirectView
 
-from .views import IndexView, DataForm
 from .views import *
 
 urlpatterns = patterns('',
@@ -10,7 +9,6 @@ urlpatterns = patterns('',
 	url(r'^$', DataForm.as_view(), name='index'),
 	url(r'^DataForm/$', DataForm.as_view(), name='data_form'),
 	url(r'^submit/$',  submit, name='submit'),
-	#url(r'^data-form/$', submit, name='submit'),
 	url(r'^admin/', include(admin.site.urls)),
 	url(r'^accounts/login/$', 'django.contrib.auth.views.login',
 		{'template_name': 'login.html'}, name='auth_login'),

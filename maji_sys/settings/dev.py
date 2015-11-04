@@ -14,7 +14,7 @@ DATABASES = {
             },
             'NAME': 'maji_base',
             'USER': 'postgres',
-            'PASSWORD': 'Maj1s3rv3r',
+            'PASSWORD': 'postgres',
             'HOST': '127.0.0.1',
             'PORT': '5432',
     }

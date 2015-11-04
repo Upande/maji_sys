@@ -51,7 +51,7 @@ def submit(request):
 	q1 = Parameterstable.objects.filter(id=param)
 	q1_values = list(q1.values())
 	for x in q1_values:
-		gk_id = x['groupkey_id']
+		gk_id = x['groupkey']
 
 	q2 = Parametergroups.objects.filter(groupkey=gk_id)
 	q2_values = list(q2.values())

@@ -71,15 +71,19 @@ def submit(request):
 		print unit
 		p = dict(postdata)
 
+		#JSON CONVERSION
+		'''
 		for k,v in p.items():
 			if v == 'parameter' and v == 'location':
 				del p[v]
 		print p
 		values_json = json.dumps(p, separators=(',',':'))
 		print values_json
+		'''
+		
 		data_submission = Submissions(
 			parameter_id=postdata['parameter'],
-			value_entries=values_json,
+			value_entries=p,
 			location_id=postdata['location'],
 			unit = unit
 			)

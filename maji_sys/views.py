@@ -10,6 +10,7 @@ from django.core.urlresolvers import reverse
 from django.db.models import Max
 from django.http import HttpResponse
 
+from datetime import *
 
 from .mixins import LoginRequiredMixin
 from .models import *
@@ -51,51 +52,47 @@ class DataForm(LoginRequiredMixin, TemplateView):
 def submit(request):
 	postdata = request.POST.copy()
 	print 'POSTDATA:'
+	print postdata
 	
-
 	try:
-		c = {}
-		c.update(csrf(request))
+		i = 0
+		first_readings = postdata.getlist('reading1')
+		second_readings = postdata.getlist('reading2')
+		for x in first_readings:	
+			d = postdata.getlist('date')[i]
+			e = datetime.strptime(d, '%Y-%m-%d')
+			reading1 = e + timedelta(hours=9)
+			reading2 = e + timedelta(hours=16)
+			v1 = postdata.getlist('reading1')[i]
+			v2 = postdata.getlist('reading2')[i]
+			flag = postdata.getlist('quality')[i]
+			first_readings_submissions = Dump(
+				date = reading1,
+				value = float(v1),
+				parameterid = postdata['parameter'],
+				locationid = postdata['location'],
+				flag = int(flag),
+				comment = postdata['description'] )
+			first_readings_submissions.save()
 
-		param=(str(postdata['parameter']))
-		q1 = Parameterstable.objects.filter(id=param)
-		q1_values = list(q1.values())
-		#print q1_values
-		for x in q1_values:
-			gk_id = x['groupkey_id']
-		q2 = Parametergroups.objects.filter(groupkey=gk_id)
-		q2_values = list(q2.values())
-		print q2_values
-		for y in q2_values:
-			unit = y['unit']
-		print unit
-		p = dict(postdata)
-
-		#JSON CONVERSION
-		'''
-		for k,v in p.items():
-			if v == 'parameter' and v == 'location':
-				del p[v]
-		print p
-		values_json = json.dumps(p, separators=(',',':'))
-		print values_json
-		'''
+			second_readings_submissions = Dump(
+				date = reading2,
+				value = float(v2),
+				parameterid = postdata['parameter'],
+				locationid = postdata['location'],
+				flag = int(flag),
+				comment = postdata['description'] )
+			second_readings_submissions.save()
+			i = i + 1
 		
-		data_submission = Submissions(
-			parameter_id=postdata['parameter'],
-			value_entries=p,
-			location_id=postdata['location'],
-			unit = unit
-			)
-		data_submission.save()
 	
 		messages.success(request, "Record added")
 		return redirect('data_form')
 	except:
-		messages.warning(request, "Parameter has not been selected")
+		messages.warning(request, "OOPS! make sure you have selected a parameter before submission")
 		return redirect('data_form')
+		'''
 
-	'''
 def post(self, request, *args, **kwargs):
 	postdata = request.POST.copy()
 	print 'POSTDATA:'

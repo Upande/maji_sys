@@ -15,6 +15,18 @@ class Aggregationperiods(models.Model):
 		managed = False
 		db_table = 'aggregationperiods'
 
+class Dump(models.Model):
+    date = models.DateTimeField()
+    value = models.FloatField(blank=True)
+    parameterid = models.CharField(max_length=64, blank=False)
+    locationid = models.CharField(max_length=64, blank=False)
+    flag = models.IntegerField()
+    comment = models.CharField(max_length=64, blank=True)
+
+    class Meta:
+        managed = False
+        db_table = 'dump'
+
 class Features(models.Model):
     featureclasskey = models.IntegerField(primary_key=True)
     featureclassname = models.CharField(max_length=255, blank=True)
@@ -94,16 +106,6 @@ class Locations(models.Model):
 	x = models.FloatField()
 	y = models.FloatField()
 	z = models.FloatField(blank=True, null=True)
-	#wgs_geom = models.TextField(blank=True)  # This field type is a guess.
-	#area = models.FloatField(blank=True, null=True)
-	#relationalocationid = models.CharField(max_length=64, blank=True)
-	#relationblocationid = models.CharField(max_length=64, blank=True)
-	#attributea = models.CharField(max_length=64, blank=True)
-	#attributeb = models.FloatField(blank=True, null=True)
-	#rainfall = models.NullBooleanField()
-	#lake_level = models.CharField(max_length=1, blank=True)
-	#harmax_h = models.FloatField(blank=True, null=True)
-	#harmin_h = models.FloatField(blank=True, null=True)
 
 	class Meta:
 		managed = False

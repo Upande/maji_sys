@@ -53,7 +53,7 @@ def submit(request):
 	postdata = request.POST.copy()
 	print 'POSTDATA:'
 	print postdata
-	
+
 	try:
 		i = 0
 		first_readings = postdata.getlist('reading1')
@@ -68,7 +68,7 @@ def submit(request):
 			flag = postdata.getlist('quality')[i]
 			first_readings_submissions = Dump(
 				date = reading1,
-				value = float(v1),
+				value = float(v1) if v1 else None,
 				parameterid = postdata['parameter'],
 				locationid = postdata['location'],
 				flag = int(flag),
@@ -77,7 +77,7 @@ def submit(request):
 
 			second_readings_submissions = Dump(
 				date = reading2,
-				value = float(v2),
+				value = float(v2) if v2 else None,
 				parameterid = postdata['parameter'],
 				locationid = postdata['location'],
 				flag = int(flag),

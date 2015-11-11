@@ -18,8 +18,8 @@ class Aggregationperiods(models.Model):
 class Dump(models.Model):
     date = models.DateTimeField()
     value = models.FloatField(blank=True)
-    parameterid = models.CharField(max_length=64, blank=False)
-    locationid = models.CharField(max_length=64, blank=False)
+    parameterid = models.CharField(max_length=64, blank=True, null=True)
+    locationid = models.CharField(max_length=64, blank=True, null=True)
     flag = models.IntegerField()
     comment = models.CharField(max_length=64, blank=True)
 

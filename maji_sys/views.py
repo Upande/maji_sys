@@ -89,7 +89,7 @@ def submit(request):
 		messages.success(request, "Record added")
 		return redirect('data_form')
 	except:
-		messages.warning(request, "OOPS! make sure you have selected a parameter before submission")
+		messages.warning(request, "OOPS! fill all your readings")
 		return redirect('data_form')
 		'''
 

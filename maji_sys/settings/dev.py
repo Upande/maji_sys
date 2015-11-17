@@ -10,7 +10,7 @@ DATABASES = {
     'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'OPTIONS': {
-                'options': '-c search_path=fews,monitoring,public'
+                'options': '-c search_path=public,fews,monitoring'
             },
             'NAME': 'maji_base',
             'USER': 'postgres',

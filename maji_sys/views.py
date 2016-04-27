@@ -70,21 +70,21 @@ def submit(request):
 			v2 = postdata.getlist('reading2')[i]
 			flag = postdata.getlist('quality')[i]
 			first_readings_submissions = Dump(
-				date = reading1,
-				value = float(v1) if v1 else None,
+				datetime = reading1,
+				scalarvalue = float(v1) if v1 else None,
 				parameterid = postdata['parameter'],
 				locationid = postdata['location'],
-				flag = int(flag),
-				comment = postdata['description'] )
+				flags = int(flag),
+				commenttext = postdata['description'] )
 			first_readings_submissions.save()
 
 			second_readings_submissions = Dump(
-				date = reading2,
-				value = float(v2) if v2 else None,
+				datetime = reading2,
+				scalarvalue = float(v2) if v2 else None,
 				parameterid = postdata['parameter'],
 				locationid = postdata['location'],
-				flag = int(flag),
-				comment = postdata['description'] )
+				flags = int(flag),
+				commenttext = postdata['description'] )
 			second_readings_submissions.save()
 			i = i + 1
 		

@@ -9,11 +9,13 @@ from django.core.context_processors import csrf
 from django.core.urlresolvers import reverse
 from django.db.models import Max
 from django.http import HttpResponse
+from django.http import JsonResponse
 
 from datetime import *
 
 from .mixins import LoginRequiredMixin
 from .models import *
+#from .models import *
 
 import json
 
@@ -22,15 +24,16 @@ def all_json_models(request, feature):
                 current_brand = Features.objects.get(featureclasskey=feature)
                 print current_brand.featureclasskey
 		print current_brand.featureclassname
-                models = Parameterstable.objects.raw('select fews.parameterstable.id, fews.parameterstable.name,fews.parameterstable.groupkey,fews.parametergroups.unit,fews.parameterstable.parameterkey  from fews.parameterstable INNER JOIN fews.parametergroups ON (fews.parameterstable.groupkey = fews.parametergroups.groupkey) where fews.parameterstable.featureclasskey=%s'%(current_brand.featureclasskey))
+                params = Parameterstable.objects.raw('select fews.parameterstable.id, fews.parameterstable.name,fews.parameterstable.groupkey,fews.parametergroups.unit,fews.parameterstable.parameterkey  from fews.parameterstable INNER JOIN fews.parametergroups ON (fews.parameterstable.groupkey = fews.parametergroups.groupkey) where fews.parameterstable.featureclasskey=%s'%(current_brand.featureclasskey))
                 
                 '''
-                print models
-                for i in models:
+                print params
+                for i in params:
                                 print i.unit
                 				'''
-                json_models = serializers.serialize("json", models)
+                json_models = serializers.serialize("json", params, fields=('id', 'name', 'groupkey', 'unit', 'parameterkey'))
                 return HttpResponse(json_models, content_type="application/javascript")
+  
 
 class IndexView(TemplateView):
 	template_name = 'dashboard.html'

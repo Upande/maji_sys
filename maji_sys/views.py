@@ -24,14 +24,14 @@ def all_json_models(request, feature):
                 current_brand = Features.objects.get(featureclasskey=feature)
                 print current_brand.featureclasskey
 		print current_brand.featureclassname
-                params = Parameterstable.objects.raw('select fews.parameterstable.id, fews.parameterstable.name,fews.parameterstable.groupkey,fews.parametergroups.unit,fews.parameterstable.parameterkey  from fews.parameterstable INNER JOIN fews.parametergroups ON (fews.parameterstable.groupkey = fews.parametergroups.groupkey) where fews.parameterstable.featureclasskey=%s'%(current_brand.featureclasskey))
+                models = Parameterstable.objects.raw('select fews.parameterstable.id, fews.parameterstable.name,fews.parameterstable.groupkey,fews.parametergroups.unit,fews.parameterstable.parameterkey  from fews.parameterstable INNER JOIN fews.parametergroups ON (fews.parameterstable.groupkey = fews.parametergroups.groupkey) where fews.parameterstable.featureclasskey=%s'%(current_brand.featureclasskey))
                 
                 '''
                 print params
                 for i in params:
                                 print i.unit
                 				'''
-                json_models = serializers.serialize("json", params, fields=('id', 'name', 'groupkey', 'unit', 'parameterkey'))
+                json_models = serializers.serialize("json", models, fields=('id', 'name', 'groupkey', 'unit', 'parameterkey'))
                 return HttpResponse(json_models, content_type="application/javascript")
   
 
@@ -91,8 +91,9 @@ def submit(request):
 	
 		messages.success(request, "Record added")
 		return redirect('data_form')
-	except:
+	except Exception, e:
 		messages.warning(request, "OOPS! fill all your readings")
+		print e
 		return redirect('data_form')
 		'''
 

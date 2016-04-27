@@ -331,7 +331,7 @@ class Topology(models.Model):
     name = models.CharField(unique=True, max_length=10)
     srid = models.IntegerField()
     precision = models.FloatField()
-    hasz = models.BooleanField()
+    hasz = models.BooleanField(default=True)
 
     class Meta:
         managed = False
